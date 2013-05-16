@@ -1,11 +1,14 @@
 {
     "name": "safestart",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Checks if everything is up to date",
     "main": "index.js",
     "repository": {
         "type": "git",
         "url": "git://github.com/marcello3d/node-safestart.git"
+    },
+    "engines" : {
+        "node" : ">=0.8"
     },
     "dependencies": {
         "semver": "1.1.3"
