@@ -13,6 +13,9 @@
     "bin": {
         "safestart": "./bin/safestart"
     },
+    "scripts": {
+        "test": "node test/self.js"
+    },
     "keywords": [ "npm", "dependencies", "node_modules", "package.json" ],
     "author": "Marcello Bastéa-Forte <marcello@cellosoft.com>",
     "license": "zlib",
