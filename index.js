@@ -14,7 +14,8 @@ module.exports = function checkPath(basePath) {
         packageJson = packages[packageJsonPath] = JSON.parse(fs.readFileSync(packageJsonPath))
     }
 
-    if (packageJson.engines && packageJson.engines.node &&
+    if (packageJson.engineStrict &&
+        packageJson.engines && packageJson.engines.node &&
             !semver.satisfies(process.version, packageJson.engines.node)) {
         throw new Error(packageJson.name + " node version mismatch (expected: " + packageJson.engines.node + ", got: " + process.version + ")")
     }
