@@ -23,11 +23,11 @@ module.exports = function checkPath(basePath) {
     Object.keys(packageJson.dependencies || {}).sort().forEach(function(dependencyName) {
         var expectedVersion = packageJson.dependencies[dependencyName]
         var base = basePath
-        var dependecyPath  
+        var dependencyPath  
         var dependency
         while (true) {
-            dependecyPath = path.join(base, 'node_modules', dependencyName)
-            dependency = checkPath(dependecyPath)
+            dependencyPath = path.join(base, 'node_modules', dependencyName)
+            dependency = checkPath(dependencyPath)
             if (dependency) {
                 break
             }
@@ -39,7 +39,7 @@ module.exports = function checkPath(basePath) {
         if (!/#/.test(expectedVersion) &&
             expectedVersion != 'latest' &&
                 !semver.satisfies(dependency.version, expectedVersion)) {
-            throw new Error(packageJson.name + " dependency version mismatch: " + dependencyName + " from " + dependecyPath + " (expected: " + expectedVersion + ", got: " + dependency.version + ")")
+            throw new Error(packageJson.name + " dependency version mismatch: " + dependencyName + " from " + dependencyPath + " (expected: " + expectedVersion + ", got: " + dependency.version + ")")
         }
     })
     return packageJson
