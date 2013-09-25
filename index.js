@@ -37,7 +37,7 @@ module.exports = function checkPath(basePath) {
             base = path.dirname(base)
         }
         if (!/#/.test(expectedVersion) &&
-            expectedVersion != 'latest' &&
+            !/^(latest|http|git)/.test(expectedVersion) &&
                 !semver.satisfies(dependency.version, expectedVersion)) {
             throw new Error(packageJson.name + " dependency version mismatch: " + dependencyName + " from " + dependencyPath + " (expected: " + expectedVersion + ", got: " + dependency.version + ")")
         }
