@@ -9,7 +9,8 @@ module.exports = function checkPath(basePath) {
     var packageJson = packages[packageJsonPath] 
     if (!packageJson) {
         if (!fs.existsSync(basePath)) {
-            return packages[packageJsonPath] = null
+            packages[packageJsonPath] = null
+            return
         }
         packageJson = packages[packageJsonPath] = JSON.parse(fs.readFileSync(packageJsonPath))
     }
@@ -20,27 +21,29 @@ module.exports = function checkPath(basePath) {
         throw new Error(packageJson.name + " node version mismatch (expected: " + packageJson.engines.node + ", got: " + process.version + ")")
     }
 
-    Object.keys(packageJson.dependencies || {}).sort().forEach(function(dependencyName) {
-        var expectedVersion = packageJson.dependencies[dependencyName]
-        var base = basePath
-        var dependencyPath  
-        var dependency
-        while (true) {
-            dependencyPath = path.join(base, 'node_modules', dependencyName)
-            dependency = checkPath(dependencyPath)
-            if (dependency) {
-                break
+    if (packageJson.dependencies) {
+        Object.keys(packageJson.dependencies).sort().forEach(function(dependencyName) {
+            var expectedVersion = packageJson.dependencies[dependencyName]
+            var base = basePath
+            var dependencyPath
+            var dependency
+            while (true) {
+                dependencyPath = path.join(base, 'node_modules', dependencyName)
+                dependency = checkPath(dependencyPath)
+                if (dependency) {
+                    break
+                }
+                if (base === path.dirname(base)) {
+                    throw new Error(packageJson.name + " dependency not found: " + dependencyName + " (expected: " + expectedVersion + ")")
+                }
+                base = path.dirname(base)
             }
-            if (base == path.dirname(base)) {
-                throw new Error(packageJson.name + " dependency not found: " + dependencyName + " (expected: " + expectedVersion + ")")
+            if (!/#/.test(expectedVersion) &&
+                !/^(latest|http|git)/.test(expectedVersion) &&
+                    !semver.satisfies(dependency.version, expectedVersion)) {
+                throw new Error(packageJson.name + " dependency version mismatch: " + dependencyName + " from " + dependencyPath + " (expected: " + expectedVersion + ", got: " + dependency.version + ")")
             }
-            base = path.dirname(base)
-        }
-        if (!/#/.test(expectedVersion) &&
-            !/^(latest|http|git)/.test(expectedVersion) &&
-                !semver.satisfies(dependency.version, expectedVersion)) {
-            throw new Error(packageJson.name + " dependency version mismatch: " + dependencyName + " from " + dependencyPath + " (expected: " + expectedVersion + ", got: " + dependency.version + ")")
-        }
-    })
+        })
+    }
     return packageJson
 }
