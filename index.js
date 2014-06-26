@@ -40,12 +40,21 @@ module.exports = function checkPath(basePath) {
             }
             if (/#/.test(expectedVersion) || /^(http|git)/.test(expectedVersion)) {
                 if (dependency._from && dependency._from.indexOf(expectedVersion) < 0) {
-                    throw new Error(packageJson.name + " dependency mismatch: " + dependencyName + " from " + dependencyPath + " (expected: " + expectedVersion + ", got: " + dependency._from + ")")
+                    fail(packageJson, dependencyName, dependencyPath, expectedVersion, dependency._from)
                 }
             } else if (!/latest/.test(expectedVersion) && !semver.satisfies(dependency.version, expectedVersion)) {
-                throw new Error(packageJson.name + " dependency version mismatch: " + dependencyName + " from " + dependencyPath + " (expected: " + expectedVersion + ", got: " + dependency.version + ")")
+                fail(packageJson, dependencyName, dependencyPath, expectedVersion, dependency.version)
             }
         })
     }
     return packageJson
+}
+
+function fail(packageJson, dependencyName, dependencyPath, expectedVersion, foundVersion) {
+    var error = new Error(packageJson.name + " dependency mismatch: " + dependencyName + " from " + dependencyPath + " (expected: " + expectedVersion + ", got: " + foundVersion + ")")
+    error.packageName = dependencyName
+    error.packagePath = dependencyPath
+    error.packageVersion = foundVersion
+    error.expectedVersion = expectedVersion
+    throw error
 }
