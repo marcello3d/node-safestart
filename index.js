@@ -38,9 +38,11 @@ module.exports = function checkPath(basePath) {
                 }
                 base = path.dirname(base)
             }
-            if (!/#/.test(expectedVersion) &&
-                !/^(latest|http|git)/.test(expectedVersion) &&
-                    !semver.satisfies(dependency.version, expectedVersion)) {
+            if (/#/.test(expectedVersion) || /^(http|git)/.test(expectedVersion)) {
+                if (dependency._from && dependency._from.indexOf(expectedVersion) < 0) {
+                    throw new Error(packageJson.name + " dependency mismatch: " + dependencyName + " from " + dependencyPath + " (expected: " + expectedVersion + ", got: " + dependency._from + ")")
+                }
+            } else if (!/latest/.test(expectedVersion) && !semver.satisfies(dependency.version, expectedVersion)) {
                 throw new Error(packageJson.name + " dependency version mismatch: " + dependencyName + " from " + dependencyPath + " (expected: " + expectedVersion + ", got: " + dependency.version + ")")
             }
         })
