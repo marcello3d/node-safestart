@@ -39,6 +39,7 @@ module.exports = function checkPath(basePath) {
                 base = path.dirname(base)
             }
             if (/#/.test(expectedVersion) || /^(http|git)/.test(expectedVersion)) {
+                expectedVersion = expectedVersion.replace(/^git\+https/, 'git')
                 if (dependency._from && dependency._from.indexOf(expectedVersion) < 0) {
                     fail(packageJson, dependencyName, dependencyPath, expectedVersion, dependency._from)
                 }
