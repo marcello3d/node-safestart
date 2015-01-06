@@ -27,6 +27,11 @@ module.exports = function checkPath(basePath) {
             var base = basePath
             var dependencyPath
             var dependency
+
+            //modification of http://stackoverflow.com/questions/24315535/remove-leading-zeros-of-a-string-in-javascript
+            //See: https://github.com/marcello3d/node-safestart/issues/4
+            var truncatedVersion = expectedVersion.replace(/\b0+(?=[0-9]+)/g, '')
+
             while (true) {
                 dependencyPath = path.join(base, 'node_modules', dependencyName)
                 dependency = checkPath(dependencyPath)
@@ -43,7 +48,7 @@ module.exports = function checkPath(basePath) {
                 if (dependency._from && dependency._from.indexOf(expectedVersion) < 0) {
                     fail(packageJson, dependencyName, dependencyPath, expectedVersion, dependency._from)
                 }
-            } else if (!/latest/.test(expectedVersion) && !semver.satisfies(dependency.version, expectedVersion)) {
+            } else if (!/latest/.test(expectedVersion) && !semver.satisfies(dependency.version, expectedVersion) && !semver.satisfies(dependency.version, truncatedVersion)) {
                 fail(packageJson, dependencyName, dependencyPath, expectedVersion, dependency.version)
             }
         })
