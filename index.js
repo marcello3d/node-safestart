@@ -6,14 +6,15 @@ var packages = {}
 
 module.exports = function checkPath(basePath) {
     var packageJsonPath = path.normalize(path.join(basePath, 'package.json'))
-    var packageJson = packages[packageJsonPath] 
-    if (!packageJson) {
-        if (!fs.existsSync(basePath)) {
-            packages[packageJsonPath] = null
-            return
-        }
-        packageJson = packages[packageJsonPath] = JSON.parse(fs.readFileSync(packageJsonPath))
+    var packageJson = packages[packageJsonPath]
+    if (packageJson) {
+        return packageJson
     }
+    if (!fs.existsSync(basePath)) {
+        packages[packageJsonPath] = null
+        return
+    }
+    packageJson = packages[packageJsonPath] = JSON.parse(fs.readFileSync(packageJsonPath))
 
     if (packageJson.engineStrict &&
         packageJson.engines && packageJson.engines.node &&
