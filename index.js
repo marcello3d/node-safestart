@@ -44,7 +44,7 @@ module.exports = function checkPath(basePath) {
                 if (dependency._from && dependency._from.indexOf(expectedVersion) < 0) {
                     fail(packageJson, dependencyName, dependencyPath, expectedVersion, dependency._from)
                 }
-            } else if (!/latest/.test(expectedVersion) && !semver.satisfies(dependency.version, expectedVersion)) {
+            } else if (!/latest/.test(expectedVersion) && !semver.satisfies(dependency.version, expectedVersion, true)) {
                 fail(packageJson, dependencyName, dependencyPath, expectedVersion, dependency.version)
             }
         })
