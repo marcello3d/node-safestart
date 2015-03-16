@@ -4,7 +4,9 @@ var semver = require('semver')
 
 var packages = {}
 
-module.exports = function checkPath(basePath) {
+module.exports = checkPath
+
+function checkPath(basePath) {
     var packageJsonPath = path.normalize(path.join(basePath, 'package.json'))
     var packageJson = packages[packageJsonPath]
     if (packageJson) {
@@ -22,34 +24,50 @@ module.exports = function checkPath(basePath) {
         throw new Error(packageJson.name + " node version mismatch (expected: " + packageJson.engines.node + ", got: " + process.version + ")")
     }
 
-    if (packageJson.dependencies) {
-        Object.keys(packageJson.dependencies).sort().forEach(function(dependencyName) {
-            var expectedVersion = packageJson.dependencies[dependencyName]
-            var base = basePath
-            var dependencyPath
-            var dependency
-            while (true) {
-                dependencyPath = path.join(base, 'node_modules', dependencyName)
-                dependency = checkPath(dependencyPath)
-                if (dependency) {
-                    break
-                }
-                if (base === path.dirname(base)) {
-                    throw new Error(packageJson.name + " dependency not found: " + dependencyName + " (expected: " + expectedVersion + ")")
-                }
-                base = path.dirname(base)
-            }
-            if (/#/.test(expectedVersion) || /^(http|git)/.test(expectedVersion)) {
-                expectedVersion = expectedVersion.replace(/^git\+https/, 'git')
-                if (dependency._from && dependency._from.indexOf(expectedVersion) < 0) {
-                    fail(packageJson, dependencyName, dependencyPath, expectedVersion, dependency._from)
-                }
-            } else if (!/latest/.test(expectedVersion) && !semver.satisfies(dependency.version, expectedVersion, true)) {
-                fail(packageJson, dependencyName, dependencyPath, expectedVersion, dependency.version)
-            }
-        })
-    }
+    var dependencies = packageJson.dependencies || {}
+    var optionalDependencies = packageJson.optionalDependencies || {}
+
+    // Optional dependencies override regular dependencies, see: https://docs.npmjs.com/files/package.json#optionaldependencies
+    Object.keys(optionalDependencies).forEach(function(key) {
+        delete dependencies[key]
+    })
+    scanDependencies(packageJson, basePath, dependencies, true)
+    scanDependencies(packageJson, basePath, optionalDependencies, false)
+
     return packageJson
+}
+
+
+function scanDependencies(packageJson, basePath, dependencies, required) {
+    Object.keys(dependencies).sort().forEach(function (dependencyName) {
+        var expectedVersion = dependencies[dependencyName]
+        var base = basePath
+        var dependencyPath
+        var dependency
+        while (true) {
+            dependencyPath = path.join(base, 'node_modules', dependencyName)
+            dependency = checkPath(dependencyPath)
+            if (dependency) {
+                break
+            }
+            if (base === path.dirname(base)) {
+                if (!required) {
+                    // It's ok if we can't find an optional dependency, skip it
+                    return
+                }
+                throw new Error(packageJson.name + " dependency not found: " + dependencyName + " (expected: " + expectedVersion + ")")
+            }
+            base = path.dirname(base)
+        }
+        if (/#/.test(expectedVersion) || /^(http|git)/.test(expectedVersion)) {
+            expectedVersion = expectedVersion.replace(/^git\+https/, 'git')
+            if (dependency._from && dependency._from.indexOf(expectedVersion) < 0) {
+                fail(packageJson, dependencyName, dependencyPath, expectedVersion, dependency._from)
+            }
+        } else if (!/latest/.test(expectedVersion) && !semver.satisfies(dependency.version, expectedVersion, true)) {
+            fail(packageJson, dependencyName, dependencyPath, expectedVersion, dependency.version)
+        }
+    })
 }
 
 function fail(packageJson, dependencyName, dependencyPath, expectedVersion, foundVersion) {
