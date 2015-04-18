@@ -1,26 +1,31 @@
 {
-    "name": "safestart",
-    "version": "0.5.0",
-    "description": "Checks if everything is up to date",
-    "main": "index.js",
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/marcello3d/node-safestart.git"
-    },
-    "engines" : {
-        "node" : ">=0.8"
-    },
-    "dependencies": {
-        "semver": "4.2.0"
-    },
-    "bin": {
-        "safestart": "./bin/safestart"
-    },
-    "scripts": {
-        "test": "node test/self.js"
-    },
-    "keywords": [ "npm", "dependencies", "node_modules", "package.json" ],
-    "author": "Marcello Bastéa-Forte <marcello@cellosoft.com>",
-    "license": "zlib",
-    "readmeFilename": "Readme.md"
+  "name": "safestart",
+  "version": "0.6.0",
+  "description": "Checks if everything is up to date",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/marcello3d/node-safestart.git"
+  },
+  "engines": {
+    "node": ">=0.8"
+  },
+  "dependencies": {
+    "semver": "4.2.0"
+  },
+  "bin": {
+    "safestart": "./bin/safestart"
+  },
+  "scripts": {
+    "test": "node test/self.js"
+  },
+  "keywords": [
+    "npm",
+    "dependencies",
+    "node_modules",
+    "package.json"
+  ],
+  "author": "Marcello Bastéa-Forte <marcello@cellosoft.com>",
+  "license": "zlib",
+  "readmeFilename": "Readme.md"
 }
