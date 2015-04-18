@@ -61,8 +61,8 @@ function scanDependencies(packageJson, basePath, dependencies, required) {
         }
         if (/#/.test(expectedVersion) || /^(http|git)/.test(expectedVersion)) {
             expectedVersion = expectedVersion.replace(/^git\+https/, 'git')
-            if (dependency._from && dependency._from.indexOf(expectedVersion) < 0) {
-                fail(packageJson, dependencyName, dependencyPath, expectedVersion, dependency._from)
+            if (dependency._resolved && dependency._resolved.indexOf(expectedVersion) < 0) {
+                fail(packageJson, dependencyName, dependencyPath, expectedVersion, dependency._resolved)
             }
         } else if (!/latest/.test(expectedVersion) && !semver.satisfies(dependency.version, expectedVersion, true)) {
             fail(packageJson, dependencyName, dependencyPath, expectedVersion, dependency.version)
