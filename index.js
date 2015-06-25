@@ -66,7 +66,7 @@ function scanDependencies(packageJson, basePath, dependencies, required) {
                 return;
             }
 
-            if (!dependencyMatch(expectedVersion, dependency._resolved)) {
+            if (!gitDependencyMatch(expectedVersion, dependency._resolved)) {
                 fail(packageJson, dependencyName, dependencyPath, expectedVersion, dependency._resolved)
             }
 
