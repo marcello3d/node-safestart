@@ -11,13 +11,14 @@
     "node": ">=0.8"
   },
   "dependencies": {
+    "normalize-git-url": "1.0.1",
     "semver": "4.2.0"
   },
   "bin": {
     "safestart": "./bin/safestart"
   },
   "scripts": {
-    "test": "node test/self.js"
+    "test": "mocha --ui bdd --reporter spec --bail --check-leaks -- test/*.js"
   },
   "keywords": [
     "npm",
@@ -27,5 +28,8 @@
   ],
   "author": "Marcello Bastéa-Forte <marcello@cellosoft.com>",
   "license": "zlib",
-  "readmeFilename": "Readme.md"
+  "readmeFilename": "Readme.md",
+  "devDependencies": {
+    "mocha": "2.2.5"
+  }
 }

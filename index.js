@@ -2,6 +2,8 @@ var fs = require('fs')
 var path = require('path')
 var semver = require('semver')
 
+var gitDependencyMatch = require('./git_dependency_match')
+
 var packages = {}
 
 module.exports = checkPath
@@ -60,10 +62,14 @@ function scanDependencies(packageJson, basePath, dependencies, required) {
             base = path.dirname(base)
         }
         if (/#/.test(expectedVersion) || /^(http|git)/.test(expectedVersion)) {
-            expectedVersion = expectedVersion.replace(/^git\+https/, 'git')
-            if (dependency._resolved && dependency._resolved.indexOf(expectedVersion) < 0) {
+            if (!dependency._resolved) {
+                return;
+            }
+
+            if (!dependencyMatch(expectedVersion, dependency._resolved)) {
                 fail(packageJson, dependencyName, dependencyPath, expectedVersion, dependency._resolved)
             }
+
         } else if (!/latest/.test(expectedVersion) && !semver.satisfies(dependency.version, expectedVersion, true)) {
             fail(packageJson, dependencyName, dependencyPath, expectedVersion, dependency.version)
         }
