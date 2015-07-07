@@ -1,4 +1,4 @@
-# UNRELEASED
+# 0.7.0 (2015-07-06)
 
   * @defunctzombie: fix handling of git dependencies
     - support for github:user/repo#hash shorthand

@@ -1,6 +1,6 @@
 {
   "name": "safestart",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Checks if everything is up to date",
   "main": "index.js",
   "repository": {
