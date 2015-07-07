@@ -20,10 +20,13 @@ function checkPath(basePath) {
     }
     packageJson = packages[packageJsonPath] = JSON.parse(fs.readFileSync(packageJsonPath))
 
-    if (packageJson.engineStrict &&
-        packageJson.engines && packageJson.engines.node &&
-            !semver.satisfies(process.version, packageJson.engines.node)) {
-        throw new Error(packageJson.name + " node version mismatch (expected: " + packageJson.engines.node + ", got: " + process.version + ")")
+    if ((packageJson.engineStrict || packageJson['engine-strict']) && packageJson.engines) {
+        if (packageJson.engines.node && !semver.satisfies(process.version, packageJson.engines.node)) {
+            throw new Error(packageJson.name + " node version mismatch (expected: " + packageJson.engines.node + ", got: " + process.version + ")")
+        }
+        if (packageJson.engines.iojs && !semver.satisfies(process.version, packageJson.engines.iojs)) {
+            throw new Error(packageJson.name + " iojs version mismatch (expected: " + packageJson.engines.iojs + ", got: " + process.version + ")")
+        }
     }
 
     var dependencies = packageJson.dependencies || {}
