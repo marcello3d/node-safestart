@@ -1,3 +1,11 @@
+# UNRELEASED
+
+  * @defunctzombie: fix handling of git dependencies
+    - support for github:user/repo#hash shorthand
+    - better normalization against installed _resolved url
+    - add tests for git dependency matching
+  * support "engine-strict" in addition to "engineStrict"
+
 # 0.6.0 (2015-04-17)
 
   * fix cache install issues by using `_resolved` instead of `_from` for git repos
@@ -34,4 +42,3 @@
 # 0.1.1
 
   * initial version
-
