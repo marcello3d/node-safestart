@@ -64,7 +64,7 @@ function scanDependencies(packageJson, basePath, dependencies, required) {
             }
             base = path.dirname(base)
         }
-        if (/#/.test(expectedVersion) || /^(http|git)/.test(expectedVersion)) {
+        if (/#/.test(expectedVersion) || /^(http|git|file:)/.test(expectedVersion)) {
             if (!dependency._resolved) {
                 return;
             }
