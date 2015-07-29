@@ -1,3 +1,7 @@
+# 0.8.0 (2015-07-29)
+
+  * @mblakele: add support for file: dependencies
+
 # 0.7.1 (2015-07-07)
 
   * @defunctzombie: fix regression
