@@ -1,3 +1,8 @@
+# 1.0.0 (2016-08-06)
+
+  * update dependencies
+  * add eslint
+
 # 0.8.0 (2015-07-29)
 
   * @mblakele: add support for file: dependencies
@@ -10,7 +15,7 @@
 
   * @defunctzombie: fix handling of git dependencies
     - support for github:user/repo#hash shorthand
-    - better normalization against installed _resolved url
+    - better normalization against installed `_resolved` url
     - add tests for git dependency matching
   * support "engine-strict" in addition to "engineStrict"
 
