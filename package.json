@@ -12,13 +12,14 @@
   },
   "dependencies": {
     "normalize-git-url": "1.0.1",
-    "semver": "4.2.0"
+    "semver": "4.3.6"
   },
   "bin": {
     "safestart": "./bin/safestart"
   },
   "scripts": {
-    "test": "mocha --ui bdd --reporter spec --bail --check-leaks -- test/*.js"
+    "test": "mocha --ui bdd --reporter spec --bail --check-leaks -- test/*.js",
+    "scan_packages": "nsp check"
   },
   "keywords": [
     "npm",
@@ -30,6 +31,7 @@
   "license": "zlib",
   "readmeFilename": "Readme.md",
   "devDependencies": {
-    "mocha": "2.2.5"
+    "mocha": "2.2.5",
+    "nsp": "2.6.1"
   }
 }
