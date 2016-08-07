@@ -2,5 +2,5 @@ language: node_js
 node_js:
     - "0.8"
     - "0.10"
-after_script:
-    - npm run scan_packages
+    - 4
+    - 6
