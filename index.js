@@ -8,7 +8,7 @@ var packages = {}
 
 module.exports = checkPath
 
-function checkPath (basePath) {
+function checkPath (basePath, options) {
   var packageJsonPath = path.normalize(path.join(basePath, 'package.json'))
   var packageJson = packages[packageJsonPath]
   if (packageJson) {
@@ -36,13 +36,20 @@ function checkPath (basePath) {
   Object.keys(optionalDependencies).forEach(function (key) {
     delete dependencies[key]
   })
-  scanDependencies(packageJson, basePath, dependencies, true)
-  scanDependencies(packageJson, basePath, optionalDependencies, false)
+
+  if (options && options.exclude) {
+    options.exclude.forEach(function (key) {
+      delete dependencies[key]
+    })
+  }
+
+  scanDependencies(packageJson, basePath, dependencies, options, true)
+  scanDependencies(packageJson, basePath, optionalDependencies, options, false)
 
   return packageJson
 }
 
-function scanDependencies (packageJson, basePath, dependencies, required) {
+function scanDependencies (packageJson, basePath, dependencies, options, required) {
   Object.keys(dependencies).sort().forEach(function (dependencyName) {
     var expectedVersion = dependencies[dependencyName]
     var base = basePath
@@ -50,7 +57,7 @@ function scanDependencies (packageJson, basePath, dependencies, required) {
     var dependency
     while (true) {
       dependencyPath = path.join(base, 'node_modules', dependencyName)
-      dependency = checkPath(dependencyPath)
+      dependency = checkPath(dependencyPath, options)
       if (dependency) {
         break
       }
