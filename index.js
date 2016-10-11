@@ -6,7 +6,7 @@ var packages = {}
 
 module.exports = function checkPath(basePath) {
     var packageJsonPath = path.normalize(path.join(basePath, 'package.json'))
-    var packageJson = packages[packageJsonPath] 
+    var packageJson = packages[packageJsonPath]
     if (!packageJson) {
         if (!fs.existsSync(basePath)) {
             packages[packageJsonPath] = null
@@ -39,7 +39,7 @@ module.exports = function checkPath(basePath) {
                 base = path.dirname(base)
             }
             if (/#/.test(expectedVersion) || /^(http|git)/.test(expectedVersion)) {
-                expectedVersion = expectedVersion.replace(/^git\+https/, 'git')
+                expectedVersion = expectedVersion.replace(/^git\+https/, 'git').replace('github:', '')
                 if (dependency._from && dependency._from.indexOf(expectedVersion) < 0) {
                     fail(packageJson, dependencyName, dependencyPath, expectedVersion, dependency._from)
                 }
