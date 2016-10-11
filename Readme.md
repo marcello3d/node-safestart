@@ -11,6 +11,12 @@ Usage / Examples
 var safestart = require('safestart')
 
 safestart(__dirname) // throws an Error on failure
+
+// you can exclude particular libraries, e.g. if you've installed
+// `foo` from a fork on GitHub, causing a version mismatch
+safestart(__dirname, {
+  exclude: ['foo']
+})
 ```
 
 Can also be used commandline:
