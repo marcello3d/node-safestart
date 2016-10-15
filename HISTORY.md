@@ -1,3 +1,7 @@
+# 1.1.0 (2016-10-15)
+
+  * add escape hatch exclude option to ignore particular packages (@Rich-Harris)
+
 # 1.0.0 (2016-08-06)
 
   * update dependencies
